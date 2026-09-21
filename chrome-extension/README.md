@@ -17,18 +17,21 @@ Paste your host geometry once, drop any image, get the exact `dockprompt apply` 
 4. Pick effect (blur/darken/tint)
 5. Copy the generated command and run it on your host
 
-## How it works
+## Design
 
-- No background scripts, no content scripts, no network access
-- No special permissions required
-- Geometry stored in localStorage (never leaves your browser)
-- Generates shell commands only — you run them yourself
+- **Glassmorphism** panels with backdrop blur
+- **Step system** with animated badges (1→2→3→done)
+- **Mini screen preview** showing dock position
+- **Command tabs**: Apply, Prompt, Inspect
+- **Terminal aesthetic**: green-on-black, dot bar, copy button
+- **Zero permissions**, zero network, zero frameworks
 
 ## Files
 
 ```
 manifest.json   — Manifest V3, no permissions
-popup.html      — UI
-popup.js        — logic (geometry parsing, command generation)
-icon*.png       — icons
+popup.html      — UI with full design system
+popup.js        — Logic (geometry parsing, image handling, command gen)
+icon*.png       — Icons
+ROADMAP.md      — UI/UX improvement roadmap
 ```

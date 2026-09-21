@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "DockPrompt",
-  "version": "0.1.0",
-  "description": "Generate dockblur commands from any image — paste your geometry once, drop images forever.",
+  "version": "0.3.0",
+  "description": "Generate dockblur commands from any image. Paste geometry, drop image, get command.",
   "permissions": [],
   "action": {
     "default_popup": "popup.html",
@@ -16,5 +16,8 @@
     "16": "icon16.png",
     "48": "icon48.png",
     "128": "icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com"
   }
 }
