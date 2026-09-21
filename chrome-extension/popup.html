@@ -2,631 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-deep: #060a14;
-      --bg-surface: #0c1220;
-      --bg-card: rgba(15, 23, 42, 0.7);
-      --bg-card-hover: rgba(20, 30, 55, 0.8);
-      --bg-input: rgba(6, 10, 20, 0.8);
-      --border: rgba(56, 80, 130, 0.3);
-      --border-active: rgba(59, 130, 246, 0.6);
-      --border-glow: rgba(59, 130, 246, 0.15);
-      --accent: #3b82f6;
-      --accent-dim: rgba(59, 130, 246, 0.15);
-      --accent-glow: rgba(59, 130, 246, 0.25);
-      --green: #22c55e;
-      --green-dim: rgba(34, 197, 94, 0.15);
-      --yellow: #eab308;
-      --red: #ef4444;
-      --text: #e2e8f0;
-      --text-dim: #64748b;
-      --text-muted: #475569;
-      --code-green: #4ade80;
-      --code-comment: #64748b;
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --radius-xl: 18px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.4);
-      --shadow-glow: 0 0 20px rgba(59,130,246,0.1);
-      --font-ui: 'Inter', -apple-system, sans-serif;
-      --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      width: 400px;
-      min-height: 200px;
-      font-family: var(--font-ui);
-      font-size: 13px;
-      background: var(--bg-deep);
-      color: var(--text);
-      padding: 20px;
-      overflow-x: hidden;
-    }
-
-    /* ── HEADER ── */
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .logo {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--accent), #6366f1);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      box-shadow: var(--shadow-glow);
-      animation: logoPulse 3s ease-in-out infinite;
-    }
-    @keyframes logoPulse {
-      0%, 100% { box-shadow: 0 0 12px rgba(59,130,246,0.2); }
-      50% { box-shadow: 0 0 20px rgba(59,130,246,0.4); }
-    }
-    .header-text h1 {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
-    .header-text .tagline {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 1px;
-    }
-    .version {
-      margin-left: auto;
-      font-size: 10px;
-      font-family: var(--font-mono);
-      color: var(--text-muted);
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 3px 8px;
-    }
-
-    /* ── STEP SYSTEM ── */
-    .step {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      margin-bottom: 14px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .step::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border-active), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .step.active::before { opacity: 1; }
-    .step.active {
-      border-color: var(--border-active);
-      box-shadow: var(--shadow-glow);
-    }
-    .step.done {
-      border-color: rgba(34, 197, 94, 0.3);
-    }
-    .step.done::before {
-      background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.4), transparent);
-      opacity: 1;
-    }
-    .step-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .step-num {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      background: var(--bg-deep);
-      border: 1.5px solid var(--border);
-      color: var(--text-dim);
-      transition: all 0.3s;
-      flex-shrink: 0;
-    }
-    .step.active .step-num {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-      box-shadow: 0 0 12px rgba(59,130,246,0.4);
-    }
-    .step.done .step-num {
-      background: var(--green);
-      border-color: var(--green);
-      color: #fff;
-    }
-    .step-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .step-subtitle {
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    /* ── GEOMETRY TEXTAREA ── */
-    .geo-textarea {
-      width: 100%;
-      background: var(--bg-input);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      line-height: 1.5;
-      padding: 10px 12px;
-      resize: none;
-      min-height: 90px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .geo-textarea::placeholder { color: var(--text-muted); }
-    .geo-textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-dim);
-    }
-    .geo-textarea.parsed {
-      border-color: var(--green);
-      box-shadow: 0 0 0 3px var(--green-dim);
-    }
-
-    /* ── MINI SCREEN PREVIEW ── */
-    .screen-preview {
-      display: none;
-      margin-top: 12px;
-      animation: fadeSlideUp 0.3s ease;
-    }
-    .screen-preview.visible { display: block; }
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .screen-frame {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #111827;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-    .screen-workarea {
-      position: absolute;
-      background: rgba(255,255,255,0.03);
-      border: 1px dashed rgba(255,255,255,0.08);
-    }
-    .screen-dock {
-      position: absolute;
-      background: linear-gradient(180deg, rgba(59,130,246,0.3), rgba(59,130,246,0.5));
-      border-top: 1.5px solid var(--accent);
-      animation: dockGlow 2s ease-in-out infinite;
-    }
-    @keyframes dockGlow {
-      0%, 100% { background: linear-gradient(180deg, rgba(59,130,246,0.3), rgba(59,130,246,0.5)); }
-      50% { background: linear-gradient(180deg, rgba(59,130,246,0.4), rgba(59,130,246,0.6)); }
-    }
-    .screen-labels {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-dim);
-    }
-    .screen-labels .highlight { color: var(--accent); font-weight: 600; }
-
-    /* ── DROP ZONE ── */
-    .drop-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius-lg);
-      padding: 28px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-    .drop-zone:hover {
-      border-color: var(--accent);
-      background: var(--accent-dim);
-    }
-    .drop-zone.dragover {
-      border-style: solid;
-      border-color: var(--accent);
-      background: var(--accent-dim);
-      box-shadow: 0 0 30px var(--accent-glow);
-      transform: scale(1.01);
-    }
-    .drop-zone.dragover .drop-icon {
-      transform: scale(1.15);
-      filter: drop-shadow(0 0 8px rgba(59,130,246,0.5));
-    }
-    .drop-icon {
-      font-size: 28px;
-      margin-bottom: 8px;
-      transition: all 0.3s;
-      filter: drop-shadow(0 0 4px rgba(59,130,246,0.2));
-    }
-    .drop-text {
-      font-size: 12px;
-      color: var(--text-dim);
-      font-weight: 500;
-    }
-    .drop-hint {
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    /* ── IMAGE PREVIEW ── */
-    .image-preview {
-      display: none;
-      margin-top: 12px;
-      animation: fadeSlideUp 0.3s ease;
-    }
-    .image-preview.visible { display: block; }
-    .image-card {
-      background: var(--bg-input);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 10px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .image-thumb {
-      width: 56px;
-      height: 56px;
-      border-radius: var(--radius-sm);
-      object-fit: cover;
-      border: 1px solid var(--border);
-    }
-    .image-meta {
-      flex: 1;
-      min-width: 0;
-    }
-    .image-name {
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .image-size {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--accent);
-      margin-top: 2px;
-    }
-    .image-remove {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text-dim);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-    .image-remove:hover {
-      border-color: var(--red);
-      color: var(--red);
-      background: rgba(239,68,68,0.1);
-    }
-
-    /* ── EFFECT BUTTONS ── */
-    .effect-group {
-      display: flex;
-      gap: 6px;
-    }
-    .effect-btn {
-      flex: 1;
-      background: var(--bg-input);
-      border: 1.5px solid var(--border);
-      color: var(--text-dim);
-      border-radius: var(--radius-md);
-      padding: 8px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: center;
-    }
-    .effect-btn:hover {
-      border-color: var(--accent);
-      color: var(--text);
-      background: var(--accent-dim);
-    }
-    .effect-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-      box-shadow: 0 0 12px rgba(59,130,246,0.3);
-    }
-
-    /* ── COMMAND BOX ── */
-    .cmd-section {
-      display: none;
-    }
-    .cmd-section.visible { display: block; animation: fadeSlideUp 0.3s ease; }
-    .cmd-tabs {
-      display: flex;
-      gap: 2px;
-      margin-bottom: 10px;
-      background: var(--bg-deep);
-      border-radius: var(--radius-md);
-      padding: 3px;
-    }
-    .cmd-tab {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--text-dim);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 500;
-      padding: 7px 8px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .cmd-tab:hover { color: var(--text); }
-    .cmd-tab.active {
-      background: var(--bg-card);
-      color: var(--accent);
-    }
-    .cmd-terminal {
-      position: relative;
-      background: #0c0c14;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-    .cmd-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid var(--border);
-    }
-    .cmd-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-    }
-    .cmd-dot.r { background: #ef4444; }
-    .cmd-dot.y { background: #eab308; }
-    .cmd-dot.g { background: #22c55e; }
-    .cmd-bar-title {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-left: 4px;
-    }
-    .cmd-body {
-      padding: 12px 14px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      line-height: 1.6;
-      max-height: 160px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-    .cmd-body .comment { color: var(--code-comment); }
-    .cmd-body .command { color: var(--code-green); }
-    .cmd-body .prompt { color: var(--accent); user-select: none; }
-    .cmd-copy {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      border-radius: var(--radius-sm);
-      padding: 5px 10px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-      z-index: 2;
-    }
-    .cmd-copy:hover { border-color: var(--accent); color: var(--text); }
-    .cmd-copy.copied {
-      background: var(--green-dim);
-      border-color: var(--green);
-      color: var(--green);
-    }
-
-    /* ── TOAST ── */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--green);
-      color: #fff;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 8px 16px;
-      border-radius: 20px;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s ease;
-      z-index: 100;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* ── FOOTER ── */
-    .footer {
-      margin-top: 16px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-      font-size: 10px;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-    }
-    .footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <input type="file" id="fileInput" accept="image/*" hidden>
+  <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,image/avif,image/gif" hidden>
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="logo">&#9632;</div>
-    <div class="header-text">
-      <h1>DockPrompt</h1>
-      <div class="tagline">Linux desktop geometry to AI-ready commands</div>
-    </div>
-    <div class="version">v0.3</div>
-  </div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="mark" aria-hidden="true"></div>
+      <div class="brand">
+        <h1>DockPrompt</h1>
+        <p>desktop geometry → AI-ready edit</p>
+      </div>
+      <div class="topmeta">
+        <span class="pill live">local</span>
+        <span class="pill">v0.4</span>
+      </div>
+    </header>
 
-  <!-- STEP 1: Geometry -->
-  <div class="step active" id="step1">
-    <div class="step-header">
-      <div class="step-num" id="step1num">1</div>
-      <div>
-        <div class="step-title">Host geometry</div>
-        <div class="step-subtitle">Paste output of <code style="font-family:var(--font-mono);color:var(--accent)">dockprompt inspect</code></div>
+    <section class="panel" id="step1" data-state="active">
+      <div class="panel-head">
+        <span class="step-no">01</span>
+        <span class="panel-title">Host geometry</span>
+        <span class="panel-sub">paste inspect</span>
+        <span class="state-dot" aria-hidden="true"></span>
       </div>
-    </div>
-    <textarea class="geo-textarea" id="geometry"
-      placeholder="Display: 1920x1080&#10;Workarea: 0,32 1920x994&#10;Dock: bottom&#10;Dock region: x=0 y=1026 w=1920 h=54"></textarea>
-    <div class="screen-preview" id="screenPreview">
-      <div class="screen-frame" id="screenFrame">
-        <div class="screen-workarea" id="screenWorkarea"></div>
-        <div class="screen-dock" id="screenDock"></div>
-      </div>
-      <div class="screen-labels">
-        <span><span class="highlight" id="lblRes">1920x1080</span></span>
-        <span>dock: <span class="highlight" id="lblDockH">54px</span></span>
-        <span>y=<span class="highlight" id="lblDockY">1026</span></span>
-      </div>
-    </div>
-  </div>
+      <div class="panel-body">
+        <textarea class="geo" id="geometry" spellcheck="false" placeholder="Display: 1920x1080&#10;Workarea: 0,32 1920x994&#10;Dock: bottom&#10;Dock region: x=0 y=1026 w=1920 h=54"></textarea>
 
-  <!-- STEP 2: Image -->
-  <div class="step" id="step2">
-    <div class="step-header">
-      <div class="step-num" id="step2num">2</div>
-      <div>
-        <div class="step-title">Image</div>
-        <div class="step-subtitle">Drop any image — any resolution, any format</div>
-      </div>
-    </div>
-    <div class="drop-zone" id="dropZone">
-      <div class="drop-icon">&#128444;</div>
-      <div class="drop-text">Drop image or click to browse</div>
-      <div class="drop-hint">PNG, JPG, WebP — any size</div>
-    </div>
-    <div class="image-preview" id="imagePreview">
-      <div class="image-card">
-        <img class="image-thumb" id="imageThumb">
-        <div class="image-meta">
-          <div class="image-name" id="imageName"></div>
-          <div class="image-size" id="imageSize"></div>
-        </div>
-        <button class="image-remove" id="imageRemove" title="Remove">&times;</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 3: Effect -->
-  <div class="step" id="step3">
-    <div class="step-header">
-      <div class="step-num" id="step3num">3</div>
-      <div>
-        <div class="step-title">Effect</div>
-        <div class="step-subtitle">What to apply to the dock region</div>
-      </div>
-    </div>
-    <div class="effect-group" id="effectGroup">
-      <button class="effect-btn active" data-effect="blur">blur</button>
-      <button class="effect-btn" data-effect="darken">darken</button>
-      <button class="effect-btn" data-effect="tint">tint</button>
-    </div>
-  </div>
-
-  <!-- STEP 4: Command -->
-  <div class="cmd-section" id="cmdSection">
-    <div class="step done" id="step4">
-      <div class="step-header">
-        <div class="step-num" id="step4num">&#10003;</div>
-        <div>
-          <div class="step-title">Command ready</div>
-          <div class="step-subtitle">Copy and run on your Linux host</div>
+        <div class="geometry-result" id="geometryResult">
+          <div class="screen-wrap">
+            <div class="screen" id="screenFrame">
+              <div class="workarea" id="screenWorkarea"></div>
+              <div class="dock" id="screenDock"></div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat accent"><small>Display</small><strong id="lblRes">—</strong></div>
+            <div class="stat"><small>Dock</small><strong id="lblEdge">—</strong></div>
+            <div class="stat"><small>Region</small><strong id="lblDockRegion">—</strong></div>
+            <div class="stat"><small>Area</small><strong id="lblDockArea">—</strong></div>
+          </div>
         </div>
       </div>
-      <div class="cmd-tabs" id="cmdTabs">
-        <button class="cmd-tab active" data-tab="apply">Apply</button>
-        <button class="cmd-tab" data-tab="prompt">Prompt</button>
-        <button class="cmd-tab" data-tab="inspect">Inspect</button>
+    </section>
+
+    <section class="panel" id="step2" data-state="idle">
+      <div class="panel-head">
+        <span class="step-no">02</span>
+        <span class="panel-title">Wallpaper</span>
+        <span class="panel-sub">any resolution</span>
+        <span class="state-dot" aria-hidden="true"></span>
       </div>
-      <div class="cmd-terminal">
-        <div class="cmd-bar">
-          <div class="cmd-dot r"></div>
-          <div class="cmd-dot y"></div>
-          <div class="cmd-dot g"></div>
-          <span class="cmd-bar-title">terminal</span>
+      <div class="panel-body">
+        <div class="drop" id="dropZone" role="button" tabindex="0">
+          <div>
+            <div class="drop-icon">+</div>
+            <b>Drop an image or browse</b>
+            <span>PNG · JPG · WebP · AVIF · GIF</span>
+          </div>
         </div>
-        <button class="cmd-copy" id="cmdCopy">copy</button>
-        <div class="cmd-body" id="cmdBody"></div>
+        <div class="image-card" id="imagePreview">
+          <img class="thumb" id="imageThumb" alt="Wallpaper preview">
+          <div style="min-width:0">
+            <div class="image-name" id="imageName"></div>
+            <div class="image-meta" id="imageSize"></div>
+          </div>
+          <button class="remove" id="imageRemove" title="Remove image" aria-label="Remove image">×</button>
+        </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="footer">
-    <span>No permissions. No network. Pure geometry.</span>
-    <span>dockprompt</span>
-  </div>
+    <section class="panel" id="step3" data-state="idle">
+      <div class="panel-head">
+        <span class="step-no">03</span>
+        <span class="panel-title">Dock treatment</span>
+        <span class="panel-sub">geometry stays authoritative</span>
+        <span class="state-dot" aria-hidden="true"></span>
+      </div>
+      <div class="panel-body">
+        <div class="segmented" id="effectGroup">
+          <button class="effect active" data-effect="blur">blur</button>
+          <button class="effect" data-effect="darken">darken</button>
+          <button class="effect" data-effect="tint">tint</button>
+        </div>
+      </div>
+    </section>
 
-  <div class="toast" id="toast">Copied to clipboard</div>
+    <section class="panel result" id="cmdSection" data-state="done">
+      <div class="panel-head">
+        <span class="step-no">✓</span>
+        <span class="panel-title">Ready</span>
+        <span class="panel-sub" id="readyMeta">—</span>
+        <span class="state-dot" aria-hidden="true"></span>
+      </div>
+      <div class="panel-body">
+        <nav class="tabs" id="cmdTabs" aria-label="Output mode">
+          <button class="tab" data-tab="apply">Apply</button>
+          <button class="tab active" data-tab="prompt">AI prompt</button>
+          <button class="tab" data-tab="inspect">Inspect</button>
+        </nav>
+        <div class="terminal">
+          <div class="terminal-head">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="terminal-title" id="terminalTitle">prompt.txt</span>
+            <button class="copy" id="cmdCopy">copy</button>
+          </div>
+          <pre id="cmdBody"></pre>
+        </div>
+        <div class="terminal-hint" id="terminalHint">Paste this prompt with the image into your image model.</div>
+      </div>
+    </section>
 
+    <footer class="footer">
+      <span class="safe">no network · no image upload</span>
+      <span>geometry first</span>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast">Copied</div>
   <script src="popup.js"></script>
 </body>
 </html>

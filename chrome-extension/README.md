@@ -1,37 +1,37 @@
-# DockPrompt Chrome Extension
+# DockPrompt browser extension
 
-Paste your host geometry once, drop any image, get the exact `dockprompt apply` command.
+A small local-only companion for the DockPrompt CLI.
 
-## Install (developer mode)
+It does three things:
 
-1. Open `chrome://extensions`
-2. Enable "Developer mode" (top right)
-3. Click "Load unpacked"
-4. Select this `chrome-extension/` folder
+1. Paste the output of `dockprompt inspect`.
+2. Drop a wallpaper to read its dimensions locally.
+3. Generate either an exact AI editing prompt, an `apply` command, or the host `inspect` command.
 
-## Usage
+## Privacy
 
-1. Run `dockprompt inspect` on your Linux host
-2. Paste the output into the "Host geometry" box (saves to localStorage)
-3. Drop any image onto the drop zone
-4. Pick effect (blur/darken/tint)
-5. Copy the generated command and run it on your host
+The extension has **no network permissions** and uploads nothing. Images are read only inside the popup with the browser `FileReader` API.
 
-## Design
+## Geometry is authoritative
 
-- **Glassmorphism** panels with backdrop blur
-- **Step system** with animated badges (1→2→3→done)
-- **Mini screen preview** showing dock position
-- **Command tabs**: Apply, Prompt, Inspect
-- **Terminal aesthetic**: green-on-black, dot bar, copy button
-- **Zero permissions**, zero network, zero frameworks
+The extension renders the dock preview from the exact `Dock region: x=… y=… w=… h=…` rectangle. Source-image resolution never changes the host dock coordinates.
 
-## Files
+Example:
 
+```text
+Display: 1920x1080
+Workarea: 0,32 1920x994
+Dock: bottom
+Dock region: x=0 y=1026 w=1920 h=54
 ```
-manifest.json   — Manifest V3, no permissions
-popup.html      — UI with full design system
-popup.js        — Logic (geometry parsing, image handling, command gen)
-icon*.png       — Icons
-ROADMAP.md      — UI/UX improvement roadmap
-```
+
+The generated AI prompt explicitly states that the dock is **54 px in the final 1920×1080 canvas**, even when the source wallpaper is 2×, 4K, or any other resolution.
+
+## Load unpacked
+
+1. Open `chrome://extensions`.
+2. Enable **Developer mode**.
+3. Click **Load unpacked**.
+4. Select this `chrome-extension/` directory.
+
+No build step is required.
