@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 380px;
+      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 13px;
+      background: #0d1117;
+      color: #c9d1d9;
+      padding: 16px;
+    }
+    h1 {
+      font-size: 15px;
+      color: #58a6ff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h1 span { font-size: 18px; }
+    .section {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #8b949e;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    textarea {
+      width: 100%;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      color: #c9d1d9;
+      font-family: inherit;
+      font-size: 12px;
+      padding: 8px;
+      resize: vertical;
+      min-height: 80px;
+    }
+    textarea:focus { outline: none; border-color: #58a6ff; }
+    .drop-zone {
+      border: 2px dashed #30363d;
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      color: #8b949e;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #58a6ff;
+      color: #58a6ff;
+      background: rgba(88,166,255,0.05);
+    }
+    .drop-zone .icon { font-size: 24px; margin-bottom: 6px; }
+    .drop-zone small { display: block; margin-top: 4px; color: #484f58; }
+    #preview {
+      max-width: 100%;
+      border-radius: 6px;
+      margin-top: 10px;
+      display: none;
+    }
+    .geo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      font-size: 12px;
+    }
+    .geo-grid .label { color: #8b949e; }
+    .geo-grid .value { color: #f0f6fc; text-align: right; }
+    .cmd-box {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 12px;
+      color: #7ee787;
+      white-space: pre-wrap;
+      word-break: break-all;
+      display: none;
+      position: relative;
+    }
+    .cmd-box .copy-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .cmd-box .copy-btn:hover { background: #30363d; }
+    .cmd-box .copy-btn.copied { color: #7ee787; border-color: #7ee787; }
+    .effect-btns {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .effect-btns button {
+      flex: 1;
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      border-radius: 6px;
+      padding: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .effect-btns button:hover { border-color: #58a6ff; }
+    .effect-btns button.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+    .hint {
+      font-size: 11px;
+      color: #484f58;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    #status {
+      font-size: 11px;
+      color: #7ee787;
+      margin-top: 6px;
+      min-height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1><span>&#9632;</span> DockPrompt</h1>
+
+  <div class="section">
+    <div class="section-title">1. Host geometry</div>
+    <textarea id="geometry" placeholder="Paste output of: dockprompt inspect&#10;&#10;Display: 1920x1080&#10;Workarea: 0,32 1920x994&#10;Dock: bottom&#10;Dock region: x=0 y=1026 w=1920 h=54"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-title">2. Drop image</div>
+    <div class="drop-zone" id="dropZone">
+      <div class="icon">&#128444;</div>
+      Drop image or click to browse
+      <small>any format, any resolution</small>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" hidden>
+    <img id="preview">
+    <div id="imageInfo"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">3. Effect</div>
+    <div class="effect-btns" id="effectBtns">
+      <button class="active" data-effect="blur">blur</button>
+      <button data-effect="darken">darken</button>
+      <button data-effect="tint">tint</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">4. Command</div>
+    <div class="cmd-box" id="cmdBox">
+      <button class="copy-btn" id="copyBtn">copy</button>
+      <code id="cmdText"></code>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <div class="hint">
+    Run <code>dockprompt inspect</code> on your Linux host to get geometry.
+    Commands work anywhere — paste in terminal, no API needed.
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
